@@ -1,3 +1,7 @@
+
+python
+Copy
+Edit
 # unit_converter.py
 import streamlit as st
 
@@ -43,3 +47,22 @@ def convert_temperature(value, from_unit, to_unit):
         return (value - 32) * 5/9 if to_unit == "Celsius" else ((value - 32) * 5/9 + 273.15)
     elif from_unit == "Kelvin":
         return (value - 273.15) if to_unit == "Celsius" else ((value - 273.15) * 9/5 + 32)
+
+# --- Select units ---
+if category == "Temperature":
+    from_unit = st.selectbox("From", ["Celsius", "Fahrenheit", "Kelvin"])
+    to_unit = st.selectbox("To", ["Celsius", "Fahrenheit", "Kelvin"])
+else:
+    from_unit = st.selectbox("From", list(units[category].keys()))
+    to_unit = st.selectbox("To", list(units[category].keys()))
+
+# --- Input and convert ---
+value = st.number_input("Enter value", value=0.0, format="%.4f")
+
+if st.button("Convert"):
+    if category == "Temperature":
+        result = convert_temperature(value, from_unit, to_unit)
+    else:
+        result = value * units[category][from_unit] / units[category][to_unit]
+
+    st.success(f"{value} {from_unit} = {round(result, 4)} {to_unit}")
